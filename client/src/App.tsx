@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Image from './components/Image';
 import './App.css';
 
-class App extends Component {
+class App extends React.Component {
   state = {data: []};
 
   componentDidMount() {
@@ -24,13 +25,17 @@ class App extends Component {
     return body;
   }
 
+  renderImage(id: string) {
+    if (id) {
+      return <Image key={id} value={id} />;
+    }
+  }
+
   render() {
     return (
       <div className="app">
         <div className="app-intro">
-          {this.state.data.map((value, idx) => {
-            return (<div key={idx}>{value}</div>)
-          })}
+          {this.state.data.map((value) => this.renderImage(value))}
         </div>
       </div>
     );
