@@ -19,7 +19,7 @@ app.get(`/api/photos/`, (_req, res) => {
         .subscribe((result: Array<any>) => res.send({express: result}));
 });
 
-app.get(`/api/test`, (_req, res) => {
+app.get(`/api/test/`, (_req, res) => {
     res.send({express: "EXPRESS SERVER IS RUNNING"});
 });
 
