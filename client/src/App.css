@@ -36,3 +36,28 @@
   max-width: 640px;
   margin: auto;
 }
+
+.image-title {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.app-intro {
+  max-width: 700px;
+  margin: auto;
+  perspective: 50em;
+}
+
+.slick-prev {
+  top: 200px;
+  left: -310px;
+}
+
+.slick-next {
+  top: 200px;
+}
+
+.next-image,
+.prev-image {
+  max-width: 300px;
+}
