@@ -15,6 +15,13 @@ interface DataShape {
     canines: Array<Label>;
 }
 
+interface Rectangle {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 interface ImageProps {
     key: string;
     value: string;
@@ -43,6 +50,18 @@ class Image extends React.Component<ImageProps, {}> {
             .subscribe(json => this.setState({response: json.express}));
     }
 
+    coordinates(coords: [[number, number], [number, number]]): Rectangle {
+        const [topLeft, bottomRight] = coords;
+        const [tlx, tly] = topLeft;
+        const [brx, bry] = bottomRight;
+        return {
+            x: tlx,
+            y: tly,
+            width: brx - tlx,
+            height: bry - tly,
+        }
+    }
+
     render() {
         if (this.state.response.image) {
             return (
@@ -50,7 +69,15 @@ class Image extends React.Component<ImageProps, {}> {
                     <div className="image-title">
                         {this.state.response.title}
                     </div>
-                    <img src={this.state.response.image} />
+                    <svg height="450" width="640">
+                        <image href={this.state.response.image} width="640" />
+                        {
+                            this.state.response.canines.map((label, i) => {
+                                let box = this.coordinates(label.coordinates);
+                                return <rect key={i} x={box.x} y={box.y} height={box.height} width={box.width} stroke="#01ff00" stroke-width="3" fill="none" />
+                            })
+                        }
+                    </svg>
                 </div>                
             )
         }
