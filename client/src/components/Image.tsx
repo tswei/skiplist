@@ -1,7 +1,9 @@
 import React from 'react';
 import * as rx from 'rxjs';
 import {first, flatMap} from 'rxjs/operators';
+import CustomizedTable from './CustomizedTable';
 
+// define data interfaces
 interface Label {
     type: string;
     age: string;
@@ -13,6 +15,12 @@ interface DataShape {
     title?: string;
     image?: string;
     canines: Array<Label>;
+}
+
+interface DataRow {
+    type: string;
+    age: string;
+    qty: number;
 }
 
 interface Rectangle {
@@ -50,6 +58,7 @@ class Image extends React.Component<ImageProps, {}> {
             .subscribe(json => this.setState({response: json.express}));
     }
 
+    // take provided coordinates and translate into svg rectangle components
     coordinates(coords: [[number, number], [number, number]]): Rectangle {
         const [topLeft, bottomRight] = coords;
         const [tlx, tly] = topLeft;
@@ -60,6 +69,24 @@ class Image extends React.Component<ImageProps, {}> {
             width: brx - tlx,
             height: bry - tly,
         }
+    }
+
+    // take listed labels and convert into table row information
+    tableInfo(labels: Array<Label>): Array<DataRow> {
+        const counter = new Map<string, Map<string, number>>();
+        labels.map(label => {
+            let type = counter.get(label.type) || new Map<string, number>();
+            let ageCount = type.get(label.age) || 0;
+            type.set(label.age, ageCount + 1);
+            counter.set(label.type, type);
+        })
+        const rows: Array<DataRow> = [];
+        Array.from(counter).map(([type, value]) => {
+            Array.from(value).map(([age, qty]) => {
+                rows.push({type, age, qty});
+            });
+        });
+        return rows;
     }
 
     render() {
@@ -78,6 +105,7 @@ class Image extends React.Component<ImageProps, {}> {
                             })
                         }
                     </svg>
+                    <CustomizedTable tableData={this.tableInfo(this.state.response.canines)} />
                 </div>                
             )
         }
